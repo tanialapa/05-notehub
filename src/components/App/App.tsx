@@ -7,7 +7,7 @@ import SearchBox from '../SearchBox/SearchBox'
 import Pagination from '../Pagination/Pagination'
 import Modal from '../Modal/Modal'
 import NoteForm from '../NoteForm/NoteForm'
-import { createNote, deleteNote, fetchNotes } from '../../services/noteService'
+import { createNote, fetchNotes } from '../../services/noteService'
 
 const PER_PAGE = 12
 
@@ -38,13 +38,6 @@ export default function App() {
     },
   })
 
-  const deleteNoteMutation = useMutation({
-    mutationFn: deleteNote,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notes'] })
-    },
-  })
-
   const notes = data?.notes ?? []
   const totalPages = data?.totalPages ?? 0
 
@@ -71,15 +64,7 @@ export default function App() {
 
       {isLoading && <p>Loading notes...</p>}
       {isError && <p>Something went wrong. Please try again.</p>}
-      {!isLoading && !isError && notes.length > 0 && (
-        <NoteList
-          notes={notes}
-          onDelete={deleteNoteMutation.mutate}
-          deletingNoteId={
-            deleteNoteMutation.isPending ? deleteNoteMutation.variables : undefined
-          }
-        />
-      )}
+      {!isLoading && !isError && notes.length > 0 && <NoteList notes={notes} />}
       {!isLoading && !isError && notes.length === 0 && <p>No notes found.</p>}
 
       {isModalOpen && (
