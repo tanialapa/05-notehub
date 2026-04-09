@@ -1,14 +1,14 @@
+import ReactDOM from 'react-dom/client'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import App from './Components/App/App'
+import './index.css'
 
+const queryClient = new QueryClient()
 
-import { createRoot } from "react-dom/client";
-
-createRoot(document.getElementById("root") as HTMLElement).render(
-  <div>
-    <h1>Welcome to React</h1>
-    <p>
-      This is JSX — it looks like HTML, but it's not quite the same. It has its
-      own rules!
-    </p>
-  </div>
-);
-
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <QueryClientProvider client={queryClient}>
+    <App />
+    <ReactQueryDevtools />
+  </QueryClientProvider>
+)
