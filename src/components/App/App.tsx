@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { useDebouncedCallback } from 'use-debounce'
 import css from './App.module.css'
 import NoteList from '../NoteList/NoteList'
@@ -7,7 +7,7 @@ import SearchBox from '../SearchBox/SearchBox'
 import Pagination from '../Pagination/Pagination'
 import Modal from '../Modal/Modal'
 import NoteForm from '../NoteForm/NoteForm'
-import { createNote, fetchNotes } from '../../services/noteService'
+import { fetchNotes } from '../../services/noteService'
 
 const PER_PAGE = 12
 
@@ -16,8 +16,6 @@ export default function App() {
   const [search, setSearch] = useState('')
   const [inputValue, setInputValue] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
-
-  const queryClient = useQueryClient()
 
   const updateSearch = useDebouncedCallback((value: string) => {
     setSearch(value)
@@ -28,14 +26,6 @@ export default function App() {
     queryKey: ['notes', page, search],
     queryFn: () => fetchNotes({ page, perPage: PER_PAGE, search }),
     placeholderData: previousData => previousData,
-  })
-
-  const createNoteMutation = useMutation({
-    mutationFn: createNote,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notes'] })
-      setIsModalOpen(false)
-    },
   })
 
   const notes = data?.notes ?? []
@@ -71,8 +61,7 @@ export default function App() {
         <Modal onClose={() => setIsModalOpen(false)}>
           <NoteForm
             onCancel={() => setIsModalOpen(false)}
-            onSubmit={createNoteMutation.mutateAsync}
-            isSubmitting={createNoteMutation.isPending}
+            onSuccess={() => setIsModalOpen(false)}
           />
         </Modal>
       )}
