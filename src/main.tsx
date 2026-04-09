@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import App from './Components/App/App'
+import App from './сomponents/App/App'
 import './index.css'
 
 const queryClient = new QueryClient()
